@@ -116,7 +116,7 @@ if __name__ == "__main__":
             if os.path.isdir(args.preds_dest):
                 dest = args.preds_dest
                 filename = len(os.listdir(dest)) + 1
-                filename = str(filename) + ".pkl"
+                filename = os.path.join(dest, str(filename) + ".pkl")
                 with open(filename, "wb") as f:
                     pickle.dump(predictions, f)
             else:
