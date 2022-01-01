@@ -67,19 +67,40 @@ def get_parser():
     return parser
 
 
-def get_predictions(img, config):
+def get_predictions(img, config=None):
+    parser = argparse.ArgumentParser(
+        description="maskformer2 demo for builtin configs")
+    if config:
+        parser.add_argument(
+            "--config-file",
+            default=config,
+            metavar="FILE",
+            help="path to config file",
+        )
+    else:
+        parser.add_argument(
+            "--config-file",
+            default="configs/coco/panoptic-segmentation/swin/maskformer2_swin_large_IN21k_384_bs16_100ep.yaml",
+            metavar="FILE",
+            help="path to config file",
+        )
+    parser.add_argument(
+        "--confidence-threshold",
+        type=float,
+        default=0.5,
+        help="Minimum score for instance predictions to be shown",
+    )
+    parser.add_argument(
+        "--opts",
+        help="Modify config options using the command-line 'KEY VALUE' pairs",
+        default=['MODEL.WEIGHTS', '/content/model_final_f07440.pkl'],
+        nargs=argparse.REMAINDER,
+    )
+    args = get_parser().parse_args()
+    setup_cfg(args)
+
     # img -> PIL Image
     # convert it to cv2 (H, W, C) BGR
-
-    cfg = get_cfg()
-    add_deeplab_config(cfg)
-    add_maskformer2_config(cfg)
-    if config:
-        cfg.merge_from_file(config)
-    else:
-        cfg.merge_from_file(
-            "../configs/coco/panoptic-segmentation/swin/maskformer2_swin_large_IN21k_384_bs16_100ep.yaml")
-
     img = np.asarray(img)
     img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
@@ -94,7 +115,7 @@ if __name__ == "__main__":
     setup_logger(name="fvcore")
     logger = setup_logger()
     logger.info("Arguments: " + str(args))
-
+    print(args.opts)
     cfg = setup_cfg(args)
 
     demo = VisualizationDemo(cfg)
