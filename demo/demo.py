@@ -4,6 +4,7 @@ import argparse
 import glob
 import multiprocessing as mp
 import os
+import pickle
 # fmt: off
 import sys  # noqa
 
@@ -20,7 +21,7 @@ from detectron2.projects.deeplab import add_deeplab_config
 from detectron2.utils.logger import setup_logger
 from mask2former import add_maskformer2_config
 
-from .predictor import VisualizationDemo
+from predictor import VisualizationDemo
 
 
 def setup_cfg(args):
@@ -28,6 +29,8 @@ def setup_cfg(args):
     cfg = get_cfg()
     add_deeplab_config(cfg)
     add_maskformer2_config(cfg)
+    print(args.config_file)
+    print(args.opts)
     cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
     cfg.freeze()
@@ -51,7 +54,6 @@ def get_parser():
         "--output",
         help="A file or directory to save output visualizations."
     )
-
     parser.add_argument(
         "--confidence-threshold",
         type=float,
@@ -67,55 +69,12 @@ def get_parser():
     return parser
 
 
-def get_predictions(img, config=None):
-    parser = argparse.ArgumentParser(
-        description="maskformer2 demo for builtin configs")
-    if config:
-        parser.add_argument(
-            "--config-file",
-            default=config,
-            metavar="FILE",
-            help="path to config file",
-        )
-    else:
-        parser.add_argument(
-            "--config-file",
-            default="configs/coco/panoptic-segmentation/swin/maskformer2_swin_large_IN21k_384_bs16_100ep.yaml",
-            metavar="FILE",
-            help="path to config file",
-        )
-    parser.add_argument(
-        "--confidence-threshold",
-        type=float,
-        default=0.5,
-        help="Minimum score for instance predictions to be shown",
-    )
-    parser.add_argument(
-        "--opts",
-        help="Modify config options using the command-line 'KEY VALUE' pairs",
-        default=['MODEL.WEIGHTS', '/content/model_final_f07440.pkl'],
-        nargs=argparse.REMAINDER,
-    )
-    args = get_parser().parse_args()
-    setup_cfg(args)
-
-    # img -> PIL Image
-    # convert it to cv2 (H, W, C) BGR
-    img = np.asarray(img)
-    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-
-    model = VisualizationDemo(cfg)
-
-    return model.get_predictions(img)
-
-
 if __name__ == "__main__":
     mp.set_start_method("spawn", force=True)
     args = get_parser().parse_args()
     setup_logger(name="fvcore")
     logger = setup_logger()
     logger.info("Arguments: " + str(args))
-    print(args.opts)
     cfg = setup_cfg(args)
 
     demo = VisualizationDemo(cfg)
