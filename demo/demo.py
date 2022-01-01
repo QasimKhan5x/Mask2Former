@@ -29,8 +29,6 @@ def setup_cfg(args):
     cfg = get_cfg()
     add_deeplab_config(cfg)
     add_maskformer2_config(cfg)
-    print(args.config_file)
-    print(args.opts)
     cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
     cfg.freeze()
@@ -53,6 +51,11 @@ def get_parser():
     parser.add_argument(
         "--output",
         help="A file or directory to save output visualizations."
+    )
+    parser.add_argument(
+        "--preds_dest",
+        default="/content/predictions",
+        help="Where to save predictions",
     )
     parser.add_argument(
         "--confidence-threshold",
@@ -109,3 +112,12 @@ if __name__ == "__main__":
                     args.input) == 1, "Please specify a directory with args.output"
                 out_filename = args.output
             visualized_output.save(out_filename)
+        if args.preds_dest:
+            if os.path.isdir(args.preds_dest):
+                dest = args.preds_dest
+                filename = len(os.listdir(dest)) + 1
+                filename = str(filename) + ".pkl"
+                with open(filename, "wb") as f:
+                    pickle.dump(predictions, f)
+            else:
+                print("Directory doesn't exist")
