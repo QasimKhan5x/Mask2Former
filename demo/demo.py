@@ -54,7 +54,6 @@ def get_parser():
     )
     parser.add_argument(
         "--preds_dest",
-        default="/content/predictions",
         help="Where to save predictions",
     )
     parser.add_argument(
