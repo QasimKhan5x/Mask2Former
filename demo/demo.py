@@ -75,7 +75,7 @@ def get_predictions(img):
     add_deeplab_config(cfg)
     add_maskformer2_config(cfg)
     cfg.merge_from_file(
-        "configs/coco/panoptic-segmentation/swin/maskformer2_swin_large_IN21k_384_bs16_100ep.yaml")
+        "../configs/coco/panoptic-segmentation/swin/maskformer2_swin_large_IN21k_384_bs16_100ep.yaml")
 
     img = np.asarray(img)
     img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
