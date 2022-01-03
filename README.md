@@ -8,30 +8,9 @@
   <img src="https://bowenc0221.github.io/images/maskformerv2_teaser.png" width="100%" height="100%"/>
 </div><br/>
 
-### Features
-* A single architecture for panoptic, instance and semantic segmentation.
-* Support major segmentation datasets: ADE20K, Cityscapes, COCO, Mapillary Vistas.
-
-## Updates
-* Video instance segmentation is now supported! Please check our [tech report](https://arxiv.org/abs/2112.10764) for more details.
-
 ## Installation
 
 See [installation instructions](INSTALL.md).
-
-## Getting Started
-
-See [Preparing Datasets for Mask2Former](datasets/README.md).
-
-See [Getting Started with Mask2Former](GETTING_STARTED.md).
-
-## Advanced usage
-
-See [Advanced Usage of Mask2Former](ADVANCED_USAGE.md).
-
-## Model Zoo and Baselines
-
-We provide a large set of baseline results and trained models available for download in the [Mask2Former Model Zoo](MODEL_ZOO.md).
 
 ## License
 
