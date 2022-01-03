@@ -114,7 +114,6 @@ if __name__ == "__main__":
         if args.preds_dest:
             dirname = os.path.dirname(args.preds_dest)
             if os.path.isdir(dirname):
-                dest = args.preds_dest
                 filename = args.preds_dest
                 filename = filename if filename.endswith('.pkl') else filename + ".pkl" 
                 with open(filename, "wb") as f:
